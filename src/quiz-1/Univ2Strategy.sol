@@ -31,19 +31,19 @@ interface IUniV2 {
 
 contract Univ2Strategy {
     IUniV2 public immutable univ2;
-    ERC20 public immutable yacToken;
+    ERC20 public immutable wbtc;
     ERC20 public immutable weth;
     ERC20 public immutable lpToken;
 
-    constructor(address _univ2, address _yacToken, address _weth, address _lpToken) {
+    constructor(address _univ2, address _wbtc, address _weth, address _lpToken) {
         univ2 = IUniV2(_univ2);
-        yacToken = ERC20(_yacToken);
+        wbtc = ERC20(_wbtc);
         weth = ERC20(_weth);
         lpToken = ERC20(_lpToken);
     }
 
     /// @notice Transfer LPs from vault and remove liquidity
-    function removeLiquidity(Vault vault, uint256 liquidity, uint256 yacMinOut, uint256 wethMinOut) external {
+    function removeLiquidity(Vault vault, uint256 liquidity, uint256 wbtcMinOut, uint256 wethMinOut) external {
         require(vault.allowedStrategies(address(this)) == true, "NOT ALLOWED");
         require(msg.sender == vault.owner(), "NOT VAULT OWNER");
 
@@ -52,58 +52,58 @@ contract Univ2Strategy {
 
         //shouldn't use block.timestamp but it'll do for now
         univ2.removeLiquidity(
-            address(yacToken), address(weth), liquidity, yacMinOut, wethMinOut, vault.owner(), block.timestamp
+            address(wbtc), address(weth), liquidity, wbtcMinOut, wethMinOut, vault.owner(), block.timestamp
         );
     }
 
     /// @notice Transfer tokens from vault and add liquidity
     function addLiquidityFromVault(
         Vault vault,
-        uint256 yacAmount,
+        uint256 wbtcAmount,
         uint256 wethAmount,
-        uint256 yacMinOut,
+        uint256 wbtcMinOut,
         uint256 wethMinOut
     ) external {
         require(vault.allowedStrategies(address(this)) == true, "NOT ALLOWED");
         require(msg.sender == vault.owner(), "NOT VAULT OWNER");
 
-        vault.transferToStrategy(address(yacToken), yacAmount);
+        vault.transferToStrategy(address(wbtc), wbtcAmount);
         vault.transferToStrategy(address(weth), wethAmount);
 
-        _addLiquidity(vault, yacAmount, wethAmount, yacMinOut, wethMinOut);
+        _addLiquidity(vault, wbtcAmount, wethAmount, wbtcMinOut, wethMinOut);
     }
 
     /// @notice Transfer tokens from owner and add liquidity
     function addLiquidityFromOwner(
         Vault vault,
-        uint256 yacAmount,
+        uint256 wbtcAmount,
         uint256 wethAmount,
-        uint256 yacMinOut,
+        uint256 wbtcMinOut,
         uint256 wethMinOut
     ) external {
         require(vault.allowedStrategies(address(this)) == true, "NOT ALLOWED");
         require(msg.sender == vault.owner(), "NOT VAULT OWNER");
 
-        SafeERC20.safeTransferFrom(yacToken, vault.owner(), address(this), yacAmount);
+        SafeERC20.safeTransferFrom(wbtc, vault.owner(), address(this), wbtcAmount);
         SafeERC20.safeTransferFrom(weth, vault.owner(), address(this), wethAmount);
 
-        _addLiquidity(vault, yacAmount, wethAmount, yacMinOut, wethMinOut);
+        _addLiquidity(vault, wbtcAmount, wethAmount, wbtcMinOut, wethMinOut);
     }
 
     /// @notice internal function to add liquidity to the vault
-    function _addLiquidity(Vault vault, uint256 yacAmount, uint256 wethAmount, uint256 yacMinOut, uint256 wethMinOut)
+    function _addLiquidity(Vault vault, uint256 wbtcAmount, uint256 wethAmount, uint256 wbtcMinOut, uint256 wethMinOut)
         internal
     {
-        SafeERC20.safeIncreaseAllowance(yacToken, address(univ2), yacAmount);
+        SafeERC20.safeIncreaseAllowance(wbtc, address(univ2), wbtcAmount);
         SafeERC20.safeIncreaseAllowance(weth, address(univ2), wethAmount);
 
         //shouldn't use block.timestamp but it'll do for now
         univ2.addLiquidity(
-            address(yacToken),
+            address(wbtc),
             address(weth),
-            yacAmount,
+            wbtcAmount,
             wethAmount,
-            yacMinOut,
+            wbtcMinOut,
             wethMinOut,
             address(vault),
             block.timestamp

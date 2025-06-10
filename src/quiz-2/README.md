@@ -2,7 +2,7 @@
 
 ### Summary
 
-A new lending protocol has been deployed. They provide with it an insurance fund.
+A new lending protocol has been deployed. They provide an in-house insurance fund.
 
 When the lending contract has some bad debt, funds that have been deposited into the insurance fund can be used to reimburse the bad debt positions.
 

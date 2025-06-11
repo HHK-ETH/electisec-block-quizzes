@@ -39,20 +39,29 @@ contract Quiz2 is Test {
         deal(address(dai), address(insurance), 10_000 ether); //insurance fund has 10k dai
         deal(address(dai), alice, 10_000 ether); //alice has 10k dai
 
-        //create attacker bad debt position and alice lending
+        //alice is lending 10k dai
         vm.startPrank(alice);
         dai.approve(address(lending), 10_000 ether);
         lending.depositLend(10_000 ether); //lending gets 10k dai from alice
         vm.stopPrank();
 
+        //attacker has a small bad debt position
         vm.startPrank(attacker);
         weth.approve(address(lending), 1 ether);
         lending.depositCollateral(1 ether);
         lending.borrow(2000 ether);
         vm.stopPrank();
 
+        //price go down which creates the bad debt
         vm.prank(deployer);
         lending.setPrice(1500e8);
+
+        //atacker liquidates himself and add himself to insurance fund
+        vm.startPrank(attacker);
+        dai.approve(address(lending), 1500 ether * 98 / 100);
+        lending.liquidate(attacker);
+        insurance.addBadDebtAccount(attacker);
+        vm.stopPrank();
     }
 
     function test_solve() external {

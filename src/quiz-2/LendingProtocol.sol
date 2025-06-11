@@ -59,22 +59,26 @@ contract LendingProtocol {
         require(validHealthFactor(usersBorrow[msg.sender], usersCollateral[msg.sender]), "HF");
     }
 
-    function repay(uint256 amount) external {
+    function repay(address user, uint256 amount) external {
         computeInterests();
         lendToken.transferFrom(msg.sender, address(this), amount);
-        usersBorrow[msg.sender] -= amount;
-        require(validHealthFactor(usersBorrow[msg.sender], usersCollateral[msg.sender]), "HF");
+        usersBorrow[user] -= amount;
     }
 
     function liquidate(address user) external {
         computeInterests();
-        require(!validHealthFactor(usersBorrow[user], usersCollateral[user]), "!HF");
+        uint256 userCollateral = usersCollateral[user];
+        require(!validHealthFactor(usersBorrow[user], userCollateral), "!HF");
 
-        collateralToken.transfer(msg.sender, usersCollateral[user]);
+        collateralToken.transfer(msg.sender, userCollateral);
         usersCollateral[user] = 0;
 
-        lendToken.transferFrom(msg.sender, address(this), usersBorrow[user]);
-        usersBorrow[user] = 0;
+        //repay debt equal to 98% of collateral value, not ideal but for quiz simplicity
+        uint256 toRepay = userCollateral * getPrice(collateralToken) * 98 / getPrice(lendToken) / 100;
+        toRepay = toRepay > usersBorrow[user] ? usersBorrow[user] : toRepay; //can't repay more than borrowed
+
+        lendToken.transferFrom(msg.sender, address(this), toRepay);
+        usersBorrow[user] -= toRepay;
     }
 
     function validHealthFactor(uint256 borrowed, uint256 collateral) internal view returns (bool) {

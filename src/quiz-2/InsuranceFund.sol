@@ -49,7 +49,11 @@ contract InsuranceFund {
             address account = accounts[i];
             delete accountsAdded[account];
 
-            lending.repay(lending.usersBorrow(account));
+            uint256 amountBorrow = lending.usersBorrow(account);
+            uint256 available = lending.lendToken().balanceOf(address(this));
+            uint256 amount = amountBorrow > available ? available : amountBorrow;
+
+            lending.repay(account, amount);
         }
 
         delete accounts;

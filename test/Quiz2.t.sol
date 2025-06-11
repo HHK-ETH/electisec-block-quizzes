@@ -78,5 +78,6 @@ contract Quiz2 is Test {
         insurance.reimburse();
 
         assertEq(dai.balanceOf(address(insurance)), 0, "!dai");
+        assertEq(lending.usersBorrow(attacker), 0, "!debt");
     }
 }

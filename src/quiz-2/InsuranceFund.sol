@@ -25,7 +25,7 @@ contract InsuranceFund {
     /// @notice withdraw from insurance fund, only owner
     function withdraw(uint256 amount) external {
         require(msg.sender == owner, "Not owner");
-        lending.lendToken().transferFrom(msg.sender, address(this), amount);
+        lending.lendToken().transfer(msg.sender, amount);
     }
 
     //decentralized insurance

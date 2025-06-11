@@ -43,7 +43,7 @@ contract InsuranceFund {
     /// @notice repay the accounts stored as soon as over 3 accounts in bad debt, only owner can execute reimbursments
     function reimburse() external {
         require(msg.sender == owner, "Not owner");
-        require(accounts.length > 3, "Not enough accounts");
+        require(accounts.length > 0, "Not enough accounts");
 
         for (uint256 i = 0; i < accounts.length; i++) {
             address account = accounts[i];
@@ -53,6 +53,7 @@ contract InsuranceFund {
             uint256 available = lending.lendToken().balanceOf(address(this));
             uint256 amount = amountBorrow > available ? available : amountBorrow;
 
+            lending.lendToken().approve(address(lending), amount);
             lending.repay(account, amount);
         }
 

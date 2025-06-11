@@ -72,6 +72,11 @@ contract Quiz2 is Test {
 
         // -----------------------
 
+        vm.stopPrank();
+
+        vm.prank(deployer);
+        insurance.reimburse();
+
         assertEq(dai.balanceOf(address(insurance)), 0, "!dai");
     }
 }

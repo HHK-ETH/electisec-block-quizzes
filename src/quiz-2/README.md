@@ -8,6 +8,8 @@ When the lending contract has some bad debt, funds that have been deposited into
 
 The repayment is a 2 steps process, first accounts get added and then the owner can call to reimburse.
 
+Note: the lendingProtocol is here for context moslty, it maybe be incomplete.
+
 ### Hint #1
 
 <details>

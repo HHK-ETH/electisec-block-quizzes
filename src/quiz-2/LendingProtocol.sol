@@ -45,25 +45,25 @@ contract LendingProtocol {
 
     function withdrawCollateral(uint256 amount) external {
         computeInterests();
-        require(validHealthFactor(usersLend[msg.sender], usersCollateral[msg.sender]), "HF");
         collateralToken.transfer(msg.sender, amount);
         usersCollateral[msg.sender] -= amount;
+        require(validHealthFactor(usersLend[msg.sender], usersCollateral[msg.sender]), "HF");
     }
 
     //borrow
 
     function borrow(uint256 amount) external {
         computeInterests();
-        require(validHealthFactor(usersLend[msg.sender], usersCollateral[msg.sender]), "HF");
         lendToken.transfer(msg.sender, amount);
         usersBorrow[msg.sender] += amount;
+        require(validHealthFactor(usersLend[msg.sender], usersCollateral[msg.sender]), "HF");
     }
 
     function repay(uint256 amount) external {
         computeInterests();
-        require(validHealthFactor(usersLend[msg.sender], usersCollateral[msg.sender]), "HF");
         lendToken.transferFrom(msg.sender, address(this), amount);
         usersBorrow[msg.sender] -= amount;
+        require(validHealthFactor(usersLend[msg.sender], usersCollateral[msg.sender]), "HF");
     }
 
     function liquidate(address user) external {

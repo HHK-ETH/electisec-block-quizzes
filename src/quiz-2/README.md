@@ -10,10 +10,20 @@ The repayment is a 2 steps process, first accounts get added and then the owner 
 
 ### Hint #1
 
-Not available yet.
+<details>
+  <summary>Spoiler warning</summary>
+  
+  Does the insurance fund correctly checks everything ?
+  
+</details>
 
-### Hint #1
+### Hint #2
 
-Not available yet.
+<details>
+  <summary>Spoiler warning</summary>
+  
+  Can we do frontrun/sandwhich something in the insurance fund ?
+  
+</details>
 
 ## Answer

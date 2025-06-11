@@ -11,10 +11,20 @@ While they're not using these vaults and strategy anymore, their wallets are sti
 
 ### Hint #1
 
-Not available yet.
+<details>
+  <summary>Spoiler warning</summary>
+  
+  Some users have approval left toward the univ2 strategy, is there a risk ?
+  
+</details>
 
-### Hint #1
+### Hint #2
 
-Not available yet.
+<details>
+  <summary>Spoiler warning</summary>
+  
+  Does the strategy correctly asserts the address to transfer from ?
+  
+</details>
 
 ## Answer

@@ -32,8 +32,8 @@ contract Quiz2 is Test {
         insurance = new InsuranceFund(deployer, address(lending));
         vm.stopPrank();
 
-        //attacker has 1 ether and 500 dai
-        deal(address(weth), attacker, 1 ether);
+        //attacker has 10 ether and 500 dai
+        deal(address(weth), attacker, 10 ether);
         deal(address(dai), attacker, 500 ether);
 
         deal(address(dai), address(insurance), 10_000 ether); //insurance fund has 10k dai
